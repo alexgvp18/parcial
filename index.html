@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eventos de Bodas</title>
+  <link rel="stylesheet" href="css/boda.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-left">
+      <button class="menu-toggle">☰</button>
+      <input type="text" placeholder="Buscar evento..." class="buscador" />
+    </div>
+    <div class="navbar-right">
+      <div class="notificacion">
+        <button class="icono-notificacion">🔔</button>
+        <span class="badge" id="noti-badge">0</span>
+        <div class="noti-mensajes" id="noti-mensajes"></div>
+      </div>
+      <div class="favoritos-usuario">
+        <button class="icono-usuario">👤</button>
+        <div class="usuario-dropdown" id="usuario-dropdown">
+          <p>Ingresaste como <strong>invitado</strong>.</p>
+          <button class="btn-registrarse">Registrarse</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>Eventos</h2>
+        <small>Bodas & Más</small>
+      </div>
+      <nav class="menu">
+        <ul>
+          <li><a href="#" data-seccion="seccion-eventos">Inicio</a></li>
+          <li><a href="#" data-seccion="seccion-favoritos">Mis Favoritos</a></li>
+          <li><a href="#" data-seccion="seccion-organizadores">Organizadores</a></li>
+          <li><a href="#" data-seccion="seccion-contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="contenido">
+      <section id="seccion-eventos" class="seccion-activa">
+        <h1>Eventos Disponibles</h1>
+        <div class="filtros">
+          <button class="filtro-activo">Todos</button>
+          <button>Salones</button>
+          <button>Buffet</button>
+          <button>Decoración</button>
+          <button>Música</button>
+        </div>
+        <section class="tarjetas-eventos"></section>
+      </section>
+
+      <section id="seccion-favoritos" class="seccion-oculta">
+        <h1>Mis Eventos Favoritos</h1>
+      </section>
+
+      <section id="seccion-organizadores" class="seccion-oculta">
+        <h1>¿Quiénes organizan?</h1>
+        <p>Información sobre los organizadores de eventos de bodas.</p>
+      </section>
+
+      <section id="seccion-contacto" class="seccion-oculta">
+        <h1>Contáctanos</h1>
+        <p>Formulario de contacto o información de atención.</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/eventos.js"></script>
+</body>
+</html>
