@@ -1,10 +1,14 @@
 class Evento {
-  constructor(id, nombre, fecha, ubicacion, categoria) {
+  constructor(id, nombre, fecha, ubicacion, categoria, organizador, telefono, correo, descripcion) {
     this.id = id;
     this.nombre = nombre;
     this.fecha = fecha;
     this.ubicacion = ubicacion;
     this.categoria = categoria;
+    this.organizador = organizador;
+    this.telefono = telefono;
+    this.correo = correo;
+    this.descripcion = descripcion;
     this.inscrito = false;
     this.favorito = false;
   }
@@ -19,10 +23,22 @@ class Evento {
 }
 
 const eventos = [
-  new Evento(1, "Salón de Lujo", "2025-08-15", "Miraflores", "Salones"),
-  new Evento(2, "Buffet Premium", "2025-08-20", "San Isidro", "Buffet"),
-  new Evento(3, "Decoración Floral", "2025-08-25", "La Molina", "Decoración"),
-  new Evento(4, "Música en Vivo", "2025-09-01", "Surco", "Música"),
+  new Evento(
+    1, "Salón de Lujo", "2025-08-15", "Miraflores", "Salones",
+    "Eventos Elite S.A.C", "987654321", "elite@eventos.pe", "Especialistas en salones premium para bodas elegantes."
+  ),
+  new Evento(
+    2, "Buffet Premium", "2025-08-20", "San Isidro", "Buffet",
+    "Delicias Gourmet", "912345678", "buffet@delicias.pe", "Catering de alta gama con menús personalizados."
+  ),
+  new Evento(
+    3, "Decoración Floral", "2025-08-25", "La Molina", "Decoración",
+    "Flores y Encanto", "998877665", "flores@encanto.pe", "Decoración floral profesional y elegante."
+  ),
+  new Evento(
+    4, "Música en Vivo", "2025- 09-01", "Surco", "Música",
+    "Melodías en Vivo", "934567890", "musica@melodias.pe", "Grupos musicales para ceremonias y fiestas."
+  ),
 ];
 
 const filtros = document.querySelectorAll(".filtros button");
@@ -33,7 +49,45 @@ const seccionFavoritos = document.getElementById("seccion-favoritos");
 const notiBadge = document.getElementById("noti-badge");
 const notiMensajes = document.getElementById("noti-mensajes");
 
+const formulario = document.getElementById("formulario-usuario");
+const modal = document.getElementById("modalFormulario");
+const cerrarModal = document.getElementById("cerrarModal");
+
 let notificaciones = [];
+let datosValidados = false;
+
+formulario.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nombre = document.getElementById("nombres").value.trim();
+  const telefono = document.getElementById("telefono").value.trim();
+  const dni = document.getElementById("dni").value.trim();
+  const correo = document.getElementById("correo").value.trim();
+
+  if (
+    nombre.length > 3 &&
+    /^\d{9}$/.test(telefono) &&
+    /^\d{8}$/.test(dni) &&
+    correo.includes("@")
+  ) {
+    datosValidados = true;
+    alert("Formulario registrado correctamente.");
+    modal.style.display = "none";
+  } else {
+    alert("Completa correctamente todos los campos.");
+  }
+});
+
+cerrarModal.addEventListener("click", () => {
+  modal.style.display = "none";
+});
+
+function verificacionAntesDeAccion(callback) {
+  if (!datosValidados) {
+    modal.style.display = "flex";
+  } else {
+    callback();
+  }
+}
 
 function renderizarEventos(filtro = "Todos") {
   if (!seccionEventos.classList.contains("seccion-activa")) return;
@@ -68,15 +122,19 @@ function renderizarEventos(filtro = "Todos") {
     `;
 
     tarjeta.querySelector(".btn-inscribir").addEventListener("click", () => {
-      evento.toggleInscripcion();
-      agregarNotificacion(evento.inscrito ? `Te inscribiste a ${evento.nombre}` : `Cancelaste inscripción a ${evento.nombre}`);
-      renderizarEventos(filtro);
+      verificacionAntesDeAccion(() => {
+        evento.toggleInscripcion();
+        agregarNotificacion(evento.inscrito ? `Te inscribiste a ${evento.nombre}` : `Cancelaste inscripción a ${evento.nombre}`);
+        renderizarEventos(filtro);
+      });
     });
 
     tarjeta.querySelector(".btn-favorito").addEventListener("click", () => {
-      evento.toggleFavorito();
-      agregarNotificacion(evento.favorito ? `Agregado a favoritos: ${evento.nombre}` : `Quitado de favoritos: ${evento.nombre}`);
-      renderizarEventos(filtro);
+      verificacionAntesDeAccion(() => {
+        evento.toggleFavorito();
+        agregarNotificacion(evento.favorito ? `Agregado a favoritos: ${evento.nombre}` : `Quitado de favoritos: ${evento.nombre}`);
+        renderizarEventos(filtro);
+      });
     });
 
     contenedorEventos.appendChild(tarjeta);
@@ -109,15 +167,19 @@ function renderizarFavoritos() {
     `;
 
     tarjeta.querySelector(".btn-inscribir").addEventListener("click", () => {
-      evento.toggleInscripcion();
-      agregarNotificacion(evento.inscrito ? `Te inscribiste a ${evento.nombre}` : `Cancelaste inscripción`);
-      renderizarFavoritos();
+      verificacionAntesDeAccion(() => {
+        evento.toggleInscripcion();
+        agregarNotificacion(evento.inscrito ? `Te inscribiste a ${evento.nombre}` : `Cancelaste inscripción`);
+        renderizarFavoritos();
+      });
     });
 
     tarjeta.querySelector(".btn-favorito").addEventListener("click", () => {
-      evento.toggleFavorito();
-      agregarNotificacion(evento.favorito ? `Agregado a favoritos: ${evento.nombre}` : `Quitado de favoritos`);
-      renderizarFavoritos();
+      verificacionAntesDeAccion(() => {
+        evento.toggleFavorito();
+        agregarNotificacion(evento.favorito ? `Agregado a favoritos: ${evento.nombre}` : `Quitado de favoritos`);
+        renderizarFavoritos();
+      });
     });
 
     seccionFavoritos.appendChild(tarjeta);
@@ -139,7 +201,43 @@ function actualizarNotificaciones() {
   });
 }
 
-// Navegación por secciones
+function renderizarOrganizadores() {
+  const seccion = document.getElementById("seccion-organizadores");
+  seccion.innerHTML = "<h1>¿Quiénes organizan?</h1>";
+
+  eventos.forEach(evento => {
+    const div = document.createElement("div");
+    div.classList.add("organizador-info");
+
+    div.innerHTML = `
+      <h3>${evento.nombre}</h3>
+      <p><strong>Organizador:</strong> ${evento.organizador}</p>
+      <p><strong>Descripción:</strong> ${evento.descripcion}</p>
+      <p><strong>Teléfono:</strong> ${evento.telefono}</p>
+    `;
+
+    seccion.appendChild(div);
+  });
+}
+
+function renderizarContacto() {
+  const seccion = document.getElementById("seccion-contacto");
+  seccion.innerHTML = "<h1>Contáctanos</h1>";
+
+  eventos.forEach(evento => {
+    const div = document.createElement("div");
+    div.classList.add("contacto-info");
+
+    div.innerHTML = `
+      <h3>${evento.nombre}</h3>
+      <p><strong>Correo:</strong> ${evento.correo}</p>
+      <p><strong>Teléfono:</strong> ${evento.telefono}</p>
+    `;
+
+    seccion.appendChild(div);
+  });
+}
+
 document.querySelectorAll(".menu a").forEach(link => {
   link.addEventListener("click", e => {
     e.preventDefault();
@@ -156,10 +254,11 @@ document.querySelectorAll(".menu a").forEach(link => {
 
     if (targetID === "seccion-eventos") renderizarEventos();
     if (targetID === "seccion-favoritos") renderizarFavoritos();
+    if (targetID === "seccion-organizadores") renderizarOrganizadores();
+    if (targetID === "seccion-contacto") renderizarContacto();
   });
 });
 
-// Filtro por categoría
 filtros.forEach(btn => {
   btn.addEventListener("click", () => {
     filtros.forEach(b => b.classList.remove("filtro-activo"));
@@ -168,11 +267,9 @@ filtros.forEach(btn => {
   });
 });
 
-// Búsqueda por nombre
 buscador.addEventListener("input", () => {
   const filtroActivo = document.querySelector(".filtro-activo").textContent;
   renderizarEventos(filtroActivo);
 });
 
-// Inicial
 renderizarEventos();

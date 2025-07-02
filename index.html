@@ -35,6 +35,7 @@
         <h2>Eventos</h2>
         <small>Bodas & Más</small>
       </div>
+
       <nav class="menu">
         <ul>
           <li><a href="#" data-seccion="seccion-eventos">Inicio</a></li>
@@ -43,6 +44,23 @@
           <li><a href="#" data-seccion="seccion-contacto">Contacto</a></li>
         </ul>
       </nav>
+
+      <form id="formulario-usuario" class="formulario-lateral">
+        <h3>Formulario</h3>
+        <label for="nombres">Nombres Completos</label>
+        <input type="text" id="nombres" required />
+
+        <label for="telefono">Teléfono (9 dígitos)</label>
+        <input type="text" id="telefono"  required />
+
+        <label for="dni">DNI (8 dígitos)</label>
+        <input type="text" id="dni" maxlength="8" required />
+
+        <label for="correo">Correo Electrónico</label>
+        <input type="email" id="correo" required />
+
+        <button type="submit">Guardar</button>
+      </form>
     </aside>
 
     <main class="contenido">
@@ -64,14 +82,20 @@
 
       <section id="seccion-organizadores" class="seccion-oculta">
         <h1>¿Quiénes organizan?</h1>
-        <p>Información sobre los organizadores de eventos de bodas.</p>
       </section>
 
       <section id="seccion-contacto" class="seccion-oculta">
         <h1>Contáctanos</h1>
-        <p>Formulario de contacto o información de atención.</p>
       </section>
     </main>
+  </div>
+
+  <div id="modalFormulario">
+    <div class="modal-contenido">
+      <h2>Completa el Formulario</h2>
+      <p>Debes llenar el formulario en la barra lateral antes de continuar.</p>
+      <button id="cerrarModal">Entendido</button>
+    </div>
   </div>
 
   <script src="js/eventos.js"></script>
